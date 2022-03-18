@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link,useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -8,66 +8,32 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducer/login/index";
 import moment from "moment";
-toast.configure();
 
-const Subcriptions = () => {
+const AllCategories = () => {
   const navigate = useNavigate();
+  const [allVideos, setallVideos] = useState([]);
+  let { category } = useParams();
 
-  const state = useSelector((state) => {
-    return {
-      isLoggedIn: state.loginReducer.isLoggedIn,
-      token: state.loginReducer.token,
-    };
-  });
-
-  const [isallSubscriptVideos, setisallSubscriptVideos] = useState(false);
-  const [allSubscriptVideos, setallSubscriptVideos] = useState([]);
-
-  const getAllvideossubscripes = () => {
+  const getAllVideosByCategories = () => {
     axios
-      .get("https://localhost:5000/subscription/mySubsciption", {
-        headers: {
-          Authorization: `Basic ${state.token}`,
-        },
-      })
+      .get(`https://localhost:5000/video/search_2?category=${category}`)
       .then((response) => {
-        setallSubscriptVideos(response.data.results);
+        setallVideos(response.data.results);
       })
       .catch((err) => {
-        toast.error(err.response.data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      });
-  };
-
-  const removeFromMySubscription = (id) => {
-    axios
-      .delete(`http://localhost:5000/subscription/delete/${id}`, {
-        headers: {
-          Authorization: `Basic ${state.token}`,
-        },
-      })
-      .then((response) => {
-        toast.success(response.data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        console.log(err);
       });
   };
 
   useEffect(() => {
-    getAllvideossubscripes();
-  }, [isallSubscriptVideos]);
+    getAllVideosByCategories();
+  }, []);
 
   return (
     <div className="videos">
       <div className="videos__container">
-        {allSubscriptVideos &&
-          allSubscriptVideos.map((video) => {
+        {allVideos &&
+          allVideos.map((video) => {
             return (
               <div
                 className="video"
@@ -99,4 +65,4 @@ const Subcriptions = () => {
   );
 };
 
-export default Subcriptions;
+export default AllCategories;

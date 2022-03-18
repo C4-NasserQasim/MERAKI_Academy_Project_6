@@ -37,11 +37,11 @@ const createNewVideo = (req, res) => {
 };
 
 //create controller for getAllVideos
-const getAllVideos = (req, res) => {
-  const userId = req.params.id
+const getChannelVideos = (req, res) => {
+  const userId = req.params.id;
   const query = `select * from videos  where is_deleted = 0 and user_id =?`;
-   const data = [userId]
-  connection.query(query, data,(err, result) => {
+  const data = [userId];
+  connection.query(query, data, (err, result) => {
     if (err) {
       console.log(err);
       res
@@ -60,7 +60,7 @@ const getAllVideos = (req, res) => {
 const getAnVideoById = (req, res) => {
   const video_Id = req.query.id;
 
-  const query = `SELECT title,videos.id,description,video_link,firstName,user_id,Likes ,Dislikes,users.user_image,videos.image,video_views,category FROM users INNER JOIN videos ON users.id=videos.user_id where videos.id = ? and videos.is_deleted =0 and videos.is_deleted =0 and users.is_deleted = 0`;
+  const query = `SELECT title,videos.id,description,videos.publish_date,video_link,firstName,user_id,Likes ,Dislikes,users.user_image,videos.image,video_views,category FROM users INNER JOIN videos ON users.id=videos.user_id where videos.id = ? and videos.is_deleted =0 and videos.is_deleted =0 and users.is_deleted = 0`;
 
   const data = [video_Id];
   connection.query(query, data, (err, result) => {
@@ -223,7 +223,7 @@ const addLikeOnVideo = (req, res) => {
   const data = [videoId];
   connection.query(query, data, (err, result) => {
     if (err) {
-      res.status(500).json({
+      returnres.status(500).json({
         success: false,
         message: "Server Error",
         err: err,
@@ -325,7 +325,7 @@ const removedisLikeVideo = (req, res) => {
 
 module.exports = {
   createNewVideo,
-  getAllVideos,
+  getChannelVideos,
   getAnVideoById,
   getAnVideoByCategory,
   deleteAnVideoById,

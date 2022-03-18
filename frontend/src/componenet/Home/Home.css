@@ -13,6 +13,7 @@
   flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
+  min-height:calc(100vh);
 }
 
 .video {
@@ -71,4 +72,7 @@ h1 {
   color: rgb(3, 3, 3);
 }
 @media (min-width: 768px) {
+}
+.video:hover {
+  cursor: pointer;
 }
